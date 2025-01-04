@@ -4,6 +4,8 @@ const count = document.getElementById("count");
 const total = document.getElementById("total");
 const movieSelect = document.getElementById("movie");
 
+populateUI();
+
 let ticketPrice = +movieSelect.value;
 
 // 選択した映画のインデックスと価格を保存
@@ -28,6 +30,26 @@ function updateSelectedCount() {
   total.innerText = selectedSeatsCount * ticketPrice;
 }
 
+// ローカルストレージからデータを取得
+function populateUI() {
+  const selectedSeats = JSON.parse(localStorage.getItem("selectedSeats"));
+
+  if (selectedSeats !== null && selectedSeats.length > 0) {
+    seats.forEach((seat, index) => {
+      if (selectedSeats.indexOf(index) > -1) {
+        seat.classList.add("selected");
+      }
+    });
+  }
+
+  const selectedMovieIndex = localStorage.getItem("selectedMovieIndex");
+
+  if (selectedMovieIndex !== null) {
+    console.dir(movieSelect)
+    movieSelect.selectedIndex = selectedMovieIndex;
+  }
+}
+
 // 映画を選択時のイベント
 movieSelect.addEventListener("change", (e) => {
   ticketPrice = +e.target.value;
@@ -46,3 +68,6 @@ container.addEventListener("click", (e) => {
     updateSelectedCount();
   }
 });
+
+// 座席数と価格を初期化
+updateSelectedCount();
